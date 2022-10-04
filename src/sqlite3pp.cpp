@@ -341,6 +341,11 @@ namespace sqlite3pp
     return sqlite3_bind_int64(stmt_, idx, value);
   }
 
+  int statement::bind(int idx, size_t value)
+  {
+      return sqlite3_bind_int64(stmt_, idx, static_cast<sqlite3_int64>(value));
+  }
+
   int statement::bind(int idx, char const* value, copy_semantic fcopy)
   {
     return sqlite3_bind_text(stmt_, idx, value, std::strlen(value), fcopy == copy ? SQLITE_TRANSIENT : SQLITE_STATIC );
@@ -354,6 +359,11 @@ namespace sqlite3pp
   int statement::bind(int idx, std::string const& value, copy_semantic fcopy)
   {
     return sqlite3_bind_text(stmt_, idx, value.c_str(), value.size(), fcopy == copy ? SQLITE_TRANSIENT : SQLITE_STATIC );
+  }
+
+  int statement::bind(int idx, std::string_view value, copy_semantic fcopy)
+  {
+      return sqlite3_bind_text(stmt_, idx, value.data(), value.size(), fcopy == copy ? SQLITE_TRANSIENT : SQLITE_STATIC);
   }
 
   int statement::bind(int idx)
@@ -384,6 +394,12 @@ namespace sqlite3pp
     return bind(idx, value);
   }
 
+  int statement::bind(char const * name, size_t value)
+  {
+      auto idx = sqlite3_bind_parameter_index(stmt_, name);
+      return bind(idx, value);
+  }
+
   int statement::bind(char const* name, char const* value, copy_semantic fcopy)
   {
     auto idx = sqlite3_bind_parameter_index(stmt_, name);
@@ -400,6 +416,12 @@ namespace sqlite3pp
   {
     auto idx = sqlite3_bind_parameter_index(stmt_, name);
     return bind(idx, value, fcopy);
+  }
+
+  int statement::bind(char const * name, std::string_view value, copy_semantic fcopy)
+  {
+      auto idx = sqlite3_bind_parameter_index(stmt_, name);
+      return bind(idx, value, fcopy);
   }
 
   int statement::bind(char const* name)
