@@ -604,9 +604,9 @@ namespace sqlite3pp
     return query_iterator(this);
   }
 
-  query::iterator query::end()
+  query::iterator query::end() const
   {
-    return query_iterator();
+    return {};
   }
 
 

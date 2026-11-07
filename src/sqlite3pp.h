@@ -329,7 +329,7 @@ namespace sqlite3pp
     using iterator = query_iterator;
 
     iterator begin();
-    iterator end();
+    iterator end() const;
   };
 
   class transaction : noncopyable
